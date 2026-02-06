@@ -1,18 +1,19 @@
 const multer = require("multer");
-const { GridFsStorage } = require("multer-gridfs-storage");
 
-const storage = new GridFsStorage({
-  url: process.env.MONGO_URI,
-  file: (req, file) => {
-    if (!file.mimetype.startsWith("image/")) {
-      throw new Error("Only images allowed");
+const storage = multer.memoryStorage();
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10 MB
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === "image/png" || file.mimetype === "image/jpeg") {
+      cb(null, true);
+    } else {
+      cb(new Error("Only PNG and JPEG images are allowed"), false);
     }
-
-    return {
-      filename: `product-${Date.now()}-${file.originalname}`,
-      bucketName: "productImages",
-    };
   },
 });
 
-module.exports = multer({ storage });
+module.exports = upload;

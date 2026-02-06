@@ -1,30 +1,51 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/db");
 
-const productSchema = new mongoose.Schema(
+const Product = sequelize.define(
+  "Product",
   {
-    name: { type: String, required: true },
-    description: { type: String },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+
+    description: {
+      type: DataTypes.TEXT,
+    },
+
     category: {
-      type: String,
-      enum: ["men", "women", "kids", "accessories"],
-      required: true,
+      type: DataTypes.ENUM("men", "women", "kids", "accessories"),
+      allowNull: false,
     },
+
     subCategory: {
-      type: String,
-      enum: ["topwear", "bottomwear", "footwear"],
-      required: true,
+      type: DataTypes.ENUM("topwear", "bottomwear", "footwear", "innerwear"),
+      allowNull: false,
     },
-    price: { type: Number, required: true },
+
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+
     sizes: {
-      type: [String],
-      enum: ["S", "M", "L", "XL"],
+      type: DataTypes.ENUM("XS", "S", "M", "L", "XL", "XXL"), // stored as "S,M,L,XL,XXL"
+      allowNull: false,
     },
-    imageId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
+
+    image: {
+      type: DataTypes.BLOB("medium"), // MEDIUMBLOB
+      allowNull: false,
+    },
+
+    imageType: {
+      type: DataTypes.STRING, // image/png or image/jpeg
+      allowNull: false,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = Product;

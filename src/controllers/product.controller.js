@@ -5,7 +5,7 @@ exports.addProduct = async (req, res) => {
     const { name, description, category, subCategory, price, sizes } = req.body;
 
     if (!req.file) {
-      return res.status(400).json({ message: "Image is required" });
+      return res.status(400).json({ message: "Product image is required" });
     }
 
     const product = await Product.create({
@@ -14,15 +14,18 @@ exports.addProduct = async (req, res) => {
       category,
       subCategory,
       price,
-      sizes: sizes ? sizes.split(",") : [],
-      imageId: req.file.id,
+      sizes, // "S,M,L,XL,XXL"
+      image: req.file.buffer,
+      imageType: req.file.mimetype,
     });
 
     res.status(201).json({
       message: "Product added successfully",
-      product,
+      productId: product.id,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
