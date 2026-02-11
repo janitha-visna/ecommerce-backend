@@ -7,24 +7,63 @@ const OrderItem = require("./orderItem.model");
 
 // ---------- Cart Relations ----------
 // One-to-one between User and Cart
-User.hasOne(Cart, { foreignKey: "userId" });
-// 🔁 FIXED: Explicitly tell belongsTo to use the SAME column name
-Cart.belongsTo(User, { foreignKey: "userId" });
+User.hasOne(Cart, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+Cart.belongsTo(User, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
 // One-to-many between Cart and CartItem
-Cart.hasMany(CartItem, { foreignKey: "cartId" });
-CartItem.belongsTo(Cart, { foreignKey: "cartId" });
+Cart.hasMany(CartItem, {
+  foreignKey: "cartId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+CartItem.belongsTo(Cart, {
+  foreignKey: "cartId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
 // One-to-many between Product and CartItem
-Product.hasMany(CartItem, { foreignKey: "productId" });
-CartItem.belongsTo(Product, { foreignKey: "productId" });
+Product.hasMany(CartItem, {
+  foreignKey: "productId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+CartItem.belongsTo(Product, {
+  foreignKey: "productId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
 // ---------- Order Relations ----------
-User.hasMany(Order, { foreignKey: "userId" });
-Order.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Order, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+Order.belongsTo(User, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
-Order.hasMany(OrderItem, { foreignKey: "orderId" });
-OrderItem.belongsTo(Order, { foreignKey: "orderId" });
+Order.hasMany(OrderItem, {
+  foreignKey: "orderId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+OrderItem.belongsTo(Order, {
+  foreignKey: "orderId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
 module.exports = {
   User,
