@@ -20,7 +20,7 @@ const Product = sequelize.define(
 
     subCategory: {
       type: DataTypes.ENUM("topwear", "bottomwear", "footwear", "innerwear"),
-      allowNull: false,
+      allowNull: true,
     },
 
     price: {
@@ -31,6 +31,12 @@ const Product = sequelize.define(
     sizes: {
       type: DataTypes.ENUM("XS", "S", "M", "L", "XL", "XXL"), // stored as "S,M,L,XL,XXL"
       allowNull: false,
+    },
+
+    stock: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
     },
 
     image: {
