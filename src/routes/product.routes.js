@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const upload = require("../middleware/upload.middleware");
-const { addProduct,getProductImage,deleteProduct,getProducts,getProductById } = require("../controllers/product.controller");
+const { addProduct,getProductImage,deleteProduct,getProducts,getProductById,reduceStock } = require("../controllers/product.controller");
 
 /**
  * @swagger
@@ -251,6 +251,54 @@ router.get("/", getProducts);
  *         description: Server error
  */
 router.get("/:id",getProductById);
+
+
+/**
+ * @swagger
+ * /api/products/{id}/reduce-stock:
+ *   patch:
+ *     summary: Reduce product stock
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Product ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               quantity:
+ *                 type: integer
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         description: Stock reduced successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 productId:
+ *                   type: integer
+ *                 newStock:
+ *                   type: integer
+ *       400:
+ *         description: Invalid request or not enough stock
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Internal server error
+ */
+router.patch("/:id/reduce-stock", reduceStock);
+
 
 
 

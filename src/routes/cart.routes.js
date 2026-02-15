@@ -21,10 +21,6 @@ const auth = require("../middleware/auth.middleware");
  *     responses:
  *       200:
  *         description: User cart retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Cart'
  */
 router.get("/", auth, cartController.getCart);
 
@@ -114,33 +110,5 @@ router.put("/:id", auth, cartController.updateQuantity);
  *         description: Item removed successfully
  */
 router.delete("/:id", auth, cartController.removeItem);
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     CartItem:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *           example: 1
- *         cartId:
- *           type: integer
- *           example: 1
- *         productId:
- *           type: integer
- *           example: 10
- *         size:
- *           type: string
- *           enum: [XS, S, M, L, XL, XXL]
- *           example: M
- *         quantity:
- *           type: integer
- *           example: 2
- *         price:
- *           type: number
- *           example: 29.99
- */
 
 module.exports = router;

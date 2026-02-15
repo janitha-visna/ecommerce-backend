@@ -164,3 +164,37 @@ exports.getProductById = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+// Reduce stock for a product
+exports.reduceStock = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { quantity } = req.body;
+
+    if (!quantity || quantity <= 0) {
+      return res.status(400).json({ message: "Quantity must be a positive number" });
+    }
+
+    const product = await Product.findByPk(id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    if (product.stock < quantity) {
+      return res.status(400).json({ message: "Not enough stock available" });
+    }
+
+    // Reduce stock
+    product.stock -= quantity;
+    await product.save();
+
+    res.status(200).json({
+      message: "Stock updated successfully",
+      productId: product.id,
+      newStock: product.stock,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
