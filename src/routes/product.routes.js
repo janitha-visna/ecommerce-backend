@@ -1,7 +1,57 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/auth.middleware");
+const adminMiddleware = require("../middleware/admin.middleware");
 const upload = require("../middleware/upload.middleware");
-const { addProduct,getProductImage,deleteProduct,getProducts,getProductById,reduceStock } = require("../controllers/product.controller");
+const {
+  addProduct,
+  getProductImage,
+  deleteProduct,
+  getProducts,
+  getProductById,
+  reduceStock,
+  getCategoryStock
+} = require("../controllers/product.controller");
+
+/**
+ * @swagger
+ * /api/products/stock:
+ *   get:
+ *     summary: Admin - Get stock count by category
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Stock counts fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 stockCounts:
+ *                   type: object
+ *                   properties:
+ *                     men:
+ *                       type: integer
+ *                       example: 120
+ *                     women:
+ *                       type: integer
+ *                       example: 80
+ *                     kids:
+ *                       type: integer
+ *                       example: 50
+ *                     accessories:
+ *                       type: integer
+ *                       example: 30
+ *       403:
+ *         description: Admin access required
+ *       401:
+ *         description: Unauthorized
+ */
+router.get("/stock", auth, adminMiddleware, getCategoryStock);
 
 /**
  * @swagger

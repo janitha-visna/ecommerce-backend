@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { signup, signin } = require("../controllers/auth.controller");
+const { signup, signin,adminSignin } = require("../controllers/auth.controller");
 
 /**
  * @swagger
@@ -67,5 +67,37 @@ router.post("/signup", signup);
  *         description: Invalid credentials
  */
 router.post("/signin", signin);
+
+/**
+ * @swagger
+ * /api/auth/admin-login:
+ *   post:
+ *     summary: Login an admin user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Admin login successful
+ *       401:
+ *         description: Invalid password
+ *       403:
+ *         description: Access denied (not an admin)
+ *       404:
+ *         description: Admin not found
+ */
+router.post("/admin-login", adminSignin);
 
 module.exports = router;

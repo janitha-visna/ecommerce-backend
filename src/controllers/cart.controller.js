@@ -109,3 +109,26 @@ exports.removeItem = async (req, res) => {
   await CartItem.destroy({ where: { id } });
   res.json({ message: "Item removed" });
 };
+
+// Get stock count by category
+exports.getCategoryStock = async (req, res) => {
+  try {
+    // Aggregate stock by category
+    const categories = ["men", "women", "kids", "accessories"];
+    const stockCounts = {};
+
+    for (const category of categories) {
+      const totalStock = await Product.sum("stock", {
+        where: { category },
+      });
+      stockCounts[category] = totalStock || 0; // if null, set 0
+    }
+
+    res.status(200).json({
+      message: "Category stock fetched successfully",
+      stockCounts,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
