@@ -1,4 +1,4 @@
-const { Cart, CartItem, Order, OrderItem } = require("../models");
+const { Cart, CartItem, Order, OrderItem,User } = require("../models");
 
 exports.checkout = async (req, res) => {
   const userId = req.user.id;
@@ -47,4 +47,63 @@ exports.getOrders = async (req, res) => {
   });
 
   res.json(orders);
+};
+
+
+exports.getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["name", "email"],
+        },
+      ],
+      attributes: ["id", "totalAmount", "status", "createdAt"],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+exports.updateOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    // ✅ Allowed ENUM values
+    const allowedStatuses = ["Processing", "Shipped", "Delivered"];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        message: "Invalid status value",
+        allowedStatuses,
+      });
+    }
+
+    const order = await Order.findByPk(id);
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    order.status = status;
+    await order.save();
+
+    return res.status(200).json({
+      message: "Order status updated successfully",
+      order,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
 };

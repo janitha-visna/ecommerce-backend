@@ -59,6 +59,8 @@ router.get("/stock", auth, adminMiddleware, getCategoryStock);
  *   post:
  *     summary: Admin - Add new product
  *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -86,7 +88,6 @@ router.get("/stock", auth, adminMiddleware, getCategoryStock);
  *               subCategory:
  *                 type: string
  *                 enum: [topwear, bottomwear, footwear, innerwear]
- *                 description: Only required if category is men, women, or kids
  *               price:
  *                 type: number
  *                 example: 1999.99
@@ -104,8 +105,10 @@ router.get("/stock", auth, adminMiddleware, getCategoryStock);
  *         description: Product created successfully
  *       400:
  *         description: Validation error
+ *       403:
+ *         description: Admin access required
  */
-router.post("/", upload.single("image"), addProduct);
+router.post("/", auth, adminMiddleware, upload.single("image"), addProduct);
 
 
 // New GET route for image
@@ -139,13 +142,14 @@ router.post("/", upload.single("image"), addProduct);
  */
 router.get("/:id/image", getProductImage);
 
-// DELETE product
 /**
  * @swagger
  * /api/products/{id}:
  *   delete:
  *     summary: Admin - Delete product
  *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -156,10 +160,12 @@ router.get("/:id/image", getProductImage);
  *     responses:
  *       200:
  *         description: Product deleted successfully
+ *       403:
+ *         description: Admin access required
  *       404:
  *         description: Product not found
  */
-router.delete("/:id", deleteProduct);
+router.delete("/:id", auth, adminMiddleware, deleteProduct);
 
 
 /**
